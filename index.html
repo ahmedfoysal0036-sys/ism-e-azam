@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
     <title>Ism-e-Azam - Professor Foysal</title>
     <style>
         :root { 
@@ -54,7 +55,7 @@
         .status-msg { color: var(--peace-green); font-size: 12px; opacity: 0.7; margin-bottom: 5px; }
     </style>
 </head>
-<body>
+<body class="notranslate">
 
     <div class="container" id="main-container">
         <h1 class="hide-focus">ইসম-এ-আজম</h1>
@@ -62,14 +63,14 @@
         <div class="sacred-letters">( কাফ - হা - ইয়া - আইন - সোয়াদ )</div>
 
         <div class="nav-buttons hide-focus">
-            <button class="nav-btn" onclick="toggleHistory()">History</button>
-            <button class="nav-btn" onclick="resetAll()">Reset</button>
-            <button class="nav-btn" onclick="toggleFocus()">Focus Mode</button>
+            <button class="nav-btn" onclick="toggleHistory()">হিস্ট্রি</button>
+            <button class="nav-btn" onclick="resetAll()">রিসেট</button>
+            <button class="nav-btn" onclick="toggleFocus()">ফোকাস মোড</button>
         </div>
 
         <div id="advice-box" class="info-panel hide-focus">
             ১. শুরুতে ৩ বার দরুদ শরীফ। <br>
-            ২. ৫১৮ বার <b>"আল-মুমিত"</b> পাঠ। <br>
+            ২. ৫১৮ বার <b>"আল-মুমীত"</b> পাঠ। <br>
             ৩. শেষে ৩ বার দরুদ ও দোয়া।
         </div>
 
@@ -110,7 +111,6 @@
         const timerDisplay = document.getElementById('timer');
         const finalBox = document.getElementById('final-instruction');
 
-        // প্রাথমিক ডিসপ্লে সেট
         updateDisplay();
 
         function updateDisplay() {
@@ -212,7 +212,7 @@
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('amal_history') || '[]');
             const list = document.getElementById('history-list');
-            list.innerHTML = history.length ? '' : '<div style="text-align:center">Record Empty</div>';
+            list.innerHTML = history.length ? '' : '<div style="text-align:center">রেকর্ড নেই</div>';
             history.forEach(item => {
                 list.innerHTML += `<div class="history-item"><span>✅ ${item.date}</span> <span>⏱️ ${item.duration}</span></div>`;
             });

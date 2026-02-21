@@ -13,227 +13,180 @@
             --accent-teal: #64ffda;
         }
         body { 
-            background: var(--deep-peace); color: var(--text-soft); font-family: sans-serif; 
+            background: var(--deep-peace); color: var(--text-soft); font-family: -apple-system, sans-serif; 
             display: flex; flex-direction: column; align-items: center; 
             height: 100vh; margin: 0; overflow: hidden; padding: 10px; box-sizing: border-box;
             user-select: none; -webkit-user-select: none;
         }
-        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 95%; transition: 0.3s; }
-        h1 { color: var(--accent-teal); font-size: 1.4rem; margin: 5px 0; opacity: 0.8; }
+        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 92%; }
         
         .sacred-letters {
             font-size: 1.3rem; color: var(--accent-teal); letter-spacing: 1px;
             margin: 10px 0; font-weight: bold; text-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
         }
 
-        .info-panel {
-            background: rgba(100, 255, 218, 0.05); border: 1px solid rgba(100, 255, 218, 0.2);
-            padding: 10px; border-radius: 10px; font-size: 0.8rem; text-align: left; width: 90%;
-        }
-        .history-section { display: none; max-height: 150px; overflow-y: auto; width: 90%; }
-        .history-item { border-bottom: 1px solid #1a3050; padding: 5px 0; display: flex; justify-content: space-between; font-size: 11px; }
+        .counter-box { font-size: 110px; font-weight: bold; color: var(--accent-teal); margin: 5px 0; }
 
-        .timer-display { font-size: 1.2rem; color: var(--peace-green); margin-top: 5px; font-family: monospace; }
-        .counter-box { font-size: 110px; font-weight: bold; color: var(--accent-teal); margin: 5px 0; line-height: 1; }
-
+        /* বাটন ডিজাইন ও ফ্ল্যাশ ইফেক্ট */
         .main-button {
-            background: var(--peace-green); color: #0a192f; width: 190px; height: 190px;
-            border-radius: 50%; border: 10px solid rgba(255, 255, 255, 0.1);
-            font-size: 28px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            transition: 0.1s; -webkit-tap-highlight-color: transparent; outline: none;
+            background: var(--peace-green); color: #0a192f; width: 210px; height: 210px;
+            border-radius: 50%; border: 8px solid rgba(255, 255, 255, 0.1);
+            font-size: 30px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transition: background 0.05s ease-out; /* দ্রুত ফ্ল্যাশ */
+            -webkit-tap-highlight-color: transparent; outline: none;
+            display: flex; align-items: center; justify-content: center;
         }
-        .main-button:active { transform: scale(0.90); }
 
-        .nav-buttons { display: flex; gap: 8px; margin-bottom: 5px; }
-        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 11px; }
-        
-        .focus-active .hide-focus { display: none !important; }
-        #final-instruction {
-            display: none; background: #112240; padding: 20px; border: 2px solid var(--peace-green);
-            border-radius: 15px; font-size: 1rem; width: 85%; position: absolute; top: 25%; z-index: 20; text-align: center;
+        /* বাটনে চাপ দিলে সাদা ফ্ল্যাশ হবে */
+        .main-button:active { 
+            background: #ffffff !important; 
+            transform: scale(0.96);
+            box-shadow: 0 0 30px #ffffff;
         }
-        .status-msg { color: var(--peace-green); font-size: 12px; opacity: 0.7; }
+
+        .nav-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
+        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 8px 16px; border-radius: 8px; font-size: 12px; }
+        
+        #final-instruction {
+            display: none; background: #112240; padding: 25px; border: 3px solid var(--peace-green);
+            border-radius: 20px; width: 85%; position: absolute; top: 20%; z-index: 20; text-align: center;
+            box-shadow: 0 0 60px rgba(0,0,0,0.9);
+        }
     </style>
 </head>
 <body class="notranslate">
 
-    <div class="container" id="main-container">
-        <h1 class="hide-focus">ইসম-এ-আজম</h1>
-        
+    <div class="container">
         <div class="sacred-letters">( কাফ - হা - ইয়া - আইন - সোয়াদ )</div>
 
-        <div class="nav-buttons hide-focus">
-            <button class="nav-btn" onclick="toggleHistory()">হিস্ট্রি</button>
-            <button class="nav-btn" onclick="resetAll()">রিসেট</button>
-            <button class="nav-btn" onclick="toggleFocus()">ফোকাস মোড</button>
-        </div>
-
-        <div id="advice-box" class="info-panel hide-focus">
+        <div id="advice-box" style="background: rgba(100, 255, 218, 0.05); border: 1px solid rgba(100, 255, 218, 0.2); padding: 12px; border-radius: 12px; font-size: 0.85rem; width: 85%; text-align: center;">
             ১. শুরুতে ৩ বার দরুদ শরীফ। <br>
             ২. ৫১৮ বার <b>"আল-মুমীত"</b> পাঠ। <br>
             ৩. শেষে ৩ বার দরুদ ও দোয়া।
         </div>
 
-        <div id="history-box" class="history-section info-panel">
-            <h3 style="margin:0; color:var(--accent-teal); font-size:13px;">হিস্ট্রি:</h3>
-            <div id="history-list"></div>
-        </div>
-
-        <div class="timer-display" id="timer">00:00</div>
+        <div style="font-size: 1.2rem; color: var(--peace-green); font-family: monospace; margin-top:10px;" id="timer">00:00</div>
         <div class="counter-box" id="count-display">0</div>
 
-        <button class="main-button" id="count-btn" onclick="increment()">গণনা</button>
+        <button class="main-button" id="count-btn" ontouchstart="handleTap(event)" onmousedown="handleTap(event)">গণনা</button>
 
-        <div class="status-msg" id="status">টার্গেট: ৫১৮</div>
+        <div style="color: var(--peace-green); font-size: 12px; opacity: 0.7; margin-bottom: 10px;">টার্গেট: ৫১৮</div>
 
-        <div id="final-instruction">
-            ✨ আমল সম্পন্ন হয়েছে! <br>
-            সময়: <span id="final-time" style="color:var(--accent-teal)"></span><br><br>
-            <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; font-size: 14px;">
-                এখন ৩ বার দরুদ শরীফ পাঠ করে আপনার ও আপনার মায়ের জন্য দোয়া করুন।
-            </div>
-            <br>
-            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold; font-size:16px;">সম্পন্ন</button>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="resetAll()">রিসেট</button>
+            <button class="nav-btn" onclick="location.reload()">রিফ্রেশ</button>
         </div>
 
-        <div class="hide-focus" style="font-size: 10px; color: #4b6584;">Professor Foysal | Spiritual Engineering</div>
+        <div id="final-instruction">
+            ✨ আলহামদুলিল্লাহ! <br> সম্পন্ন হয়েছে! <br><br>
+            <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; font-size: 15px;">
+                এখন ৩ বার দরুদ শরীফ পাঠ করে দোয়া করুন।
+            </div>
+            <br>
+            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold; font-size:18px; padding:12px;">সম্পন্ন</button>
+        </div>
+
+        <div style="font-size: 10px; color: #4b6584; margin-bottom: 5px;">Professor Foysal | Spiritual Engineering</div>
     </div>
 
     <script>
-        let count = parseInt(localStorage.getItem('current_session_count')) || 0;
+        let count = 0;
         let timerRunning = false;
-        let seconds = parseInt(localStorage.getItem('current_session_seconds')) || 0;
+        let seconds = 0;
         let timerInterval;
-        let vibInterval; // Full vibration control
-        let focusMode = false;
+        let alarmInterval;
+        let audioCtx;
         const target = 518;
         
         const countDisplay = document.getElementById('count-display');
         const timerDisplay = document.getElementById('timer');
         const finalBox = document.getElementById('final-instruction');
 
-        updateDisplay();
-
-        function updateDisplay() {
-            countDisplay.innerText = count;
-            let mins = Math.floor(seconds / 60);
-            let secs = seconds % 60;
-            timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        // iPhone-এর জন্য অডিও সিস্টেম চালু করা
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
 
-        function toggleFocus() {
-            focusMode = !focusMode;
-            document.getElementById('main-container').classList.toggle('focus-active');
-        }
-
-        function startTimer() {
-            if (!timerRunning) {
+        function handleTap(e) {
+            e.preventDefault(); 
+            initAudio();
+            
+            if (!timerRunning && count < target) {
                 timerRunning = true;
                 timerInterval = setInterval(() => {
                     seconds++;
-                    localStorage.setItem('current_session_seconds', seconds);
-                    updateDisplay();
+                    let mins = Math.floor(seconds / 60);
+                    let secs = seconds % 60;
+                    timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
                 }, 1000);
+            }
+
+            if (count < target) {
+                count++;
+                countDisplay.innerText = count;
+                playTick(); // ট্যাপ করলে শব্দ হবে
+                if (count === target) completeAmal();
             }
         }
 
-        function increment() {
-            if (count === 0) startTimer();
-            if (count < target) {
-                count++;
-                localStorage.setItem('current_session_count', count);
-                updateDisplay();
-                
-                // Tap vibration
-                if (window.navigator.vibrate) window.navigator.vibrate(50);
-                
-                if (count === target) completeAmal();
-            }
+        function playTick() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1000, audioCtx.currentTime); // হালকা ক্লিক সাউন্ড
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
         }
 
         function completeAmal() {
             clearInterval(timerInterval);
             timerRunning = false;
-            saveToHistory(timerDisplay.innerText);
-            document.getElementById('final-time').innerText = timerDisplay.innerText;
-            playBeep();
             
-            // Full Continuous Vibration start
-            if (window.navigator.vibrate) {
-                vibInterval = setInterval(() => {
-                    window.navigator.vibrate(1000);
-                }, 1000);
-            }
+            // আমল শেষ হলে একটানা বিপ শব্দ বাজবে
+            alarmInterval = setInterval(() => {
+                playAlarm(880, 0.3); 
+            }, 600);
 
-            if(focusMode) toggleFocus(); 
             finalBox.style.display = 'block';
-            clearSession();
         }
 
-        function playBeep() {
-            try {
-                const context = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = context.createOscillator();
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(880, context.currentTime);
-                oscillator.connect(context.destination);
-                oscillator.start();
-                oscillator.stop(context.currentTime + 1);
-            } catch(e) {}
-        }
-
-        function clearSession() {
-            localStorage.removeItem('current_session_count');
-            localStorage.removeItem('current_session_seconds');
+        function playAlarm(freq, duration) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
         }
 
         function resetAll() {
-            if(confirm("সবকিছু রিসেট করতে চান?")) {
-                clearInterval(timerInterval);
-                if(vibInterval) clearInterval(vibInterval);
-                count = 0; seconds = 0; timerRunning = false;
-                clearSession();
-                updateDisplay();
-                finalBox.style.display = 'none';
+            if(confirm("রিসেট করতে চান?")) {
+                location.reload();
             }
-        }
-
-        function saveToHistory(timeTaken) {
-            let history = JSON.parse(localStorage.getItem('amal_history') || '[]');
-            const now = new Date();
-            const entry = { date: now.toLocaleDateString(), duration: timeTaken };
-            history.unshift(entry);
-            localStorage.setItem('amal_history', JSON.stringify(history.slice(0, 10)));
-        }
-
-        function toggleHistory() {
-            const hBox = document.getElementById('history-box');
-            const aBox = document.getElementById('advice-box');
-            if (hBox.style.display === 'none' || hBox.style.display === '') {
-                loadHistory();
-                hBox.style.display = 'block'; aBox.style.display = 'none';
-            } else {
-                hBox.style.display = 'none'; aBox.style.display = 'block';
-            }
-        }
-
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('amal_history') || '[]');
-            const list = document.getElementById('history-list');
-            list.innerHTML = history.length ? '' : '<div style="text-align:center">রেকর্ড নেই</div>';
-            history.forEach(item => {
-                list.innerHTML += `<div class="history-item"><span>✅ ${item.date}</span> <span>⏱️ ${item.duration}</span></div>`;
-            });
         }
 
         function closeFinal() { 
-            if(vibInterval) {
-                clearInterval(vibInterval);
-                window.navigator.vibrate(0);
-            }
+            if(alarmInterval) clearInterval(alarmInterval);
             finalBox.style.display = 'none'; 
-            count = 0; seconds = 0; 
-            updateDisplay(); 
+            count = 0; seconds = 0;
+            countDisplay.innerText = "0";
+            timerDisplay.innerText = "00:00";
         }
     </script>
 </body>

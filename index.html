@@ -15,60 +15,66 @@
             background: var(--deep-peace); color: var(--text-soft); font-family: sans-serif; 
             display: flex; flex-direction: column; align-items: center; 
             height: 100vh; margin: 0; overflow: hidden; padding: 10px; box-sizing: border-box;
+            user-select: none; -webkit-user-select: none;
         }
         .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 95%; transition: 0.3s; }
-        h1 { color: var(--accent-teal); font-size: 1.6rem; margin: 5px 0; text-shadow: 0 0 10px rgba(100, 255, 218, 0.3); }
+        h1 { color: var(--accent-teal); font-size: 1.4rem; margin: 5px 0; opacity: 0.8; }
         
+        .sacred-letters {
+            font-size: 1.3rem; color: var(--accent-teal); letter-spacing: 1px;
+            margin: 10px 0; font-weight: bold; text-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
+        }
+
         .info-panel {
-            background: rgba(100, 255, 218, 0.05); border: 1px solid rgba(100, 255, 218, 0.3);
+            background: rgba(100, 255, 218, 0.05); border: 1px solid rgba(100, 255, 218, 0.2);
             padding: 10px; border-radius: 10px; font-size: 0.8rem; text-align: left; width: 90%;
         }
         .history-section { display: none; max-height: 150px; overflow-y: auto; width: 90%; }
         .history-item { border-bottom: 1px solid #1a3050; padding: 5px 0; display: flex; justify-content: space-between; font-size: 11px; }
 
         .timer-display { font-size: 1.2rem; color: var(--peace-green); margin-top: 5px; font-family: monospace; }
-        .counter-box { font-size: 100px; font-weight: bold; color: var(--accent-teal); margin: 10px 0; }
+        .counter-box { font-size: 110px; font-weight: bold; color: var(--accent-teal); margin: 5px 0; line-height: 1; }
 
         .main-button {
             background: var(--peace-green); color: #0a192f; width: 190px; height: 190px;
-            border-radius: 50%; border: 8px solid rgba(255, 255, 255, 0.1);
-            font-size: 26px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            transition: 0.2s; -webkit-tap-highlight-color: transparent;
+            border-radius: 50%; border: 10px solid rgba(255, 255, 255, 0.1);
+            font-size: 28px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transition: 0.1s; -webkit-tap-highlight-color: transparent; outline: none;
         }
-        .main-button:active { transform: scale(0.92); }
+        .main-button:active { transform: scale(0.90); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
 
         .nav-buttons { display: flex; gap: 8px; margin-bottom: 5px; }
-        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 11px; }
-        .focus-active .hide-focus { display: none ! nocturnal; visibility: hidden; opacity: 0; height: 0; padding: 0; margin: 0; overflow: hidden; }
-
+        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+        
+        .focus-active .hide-focus { display: none !important; }
         #final-instruction {
             display: none; background: #112240; padding: 20px; border: 2px solid var(--peace-green);
-            border-radius: 15px; font-size: 1rem; width: 85%; position: absolute; top: 30%; z-index: 20; text-align: center;
-            box-shadow: 0 0 40px rgba(0,0,0,0.7);
+            border-radius: 15px; font-size: 1rem; width: 85%; position: absolute; top: 25%; z-index: 20; text-align: center;
         }
-        .status-msg { color: var(--peace-green); font-size: 13px; opacity: 0.8; }
+        .status-msg { color: var(--peace-green); font-size: 12px; opacity: 0.7; margin-bottom: 5px; }
     </style>
 </head>
-<body id="body-main">
+<body>
 
     <div class="container" id="main-container">
         <h1 class="hide-focus">ইসম-এ-আজম</h1>
         
-        <div class="nav-buttons">
-            <button class="nav-btn hide-focus" onclick="toggleHistory()">History</button>
-            <button class="nav-btn hide-focus" onclick="resetAll()">Reset</button>
-            <button class="nav-btn" onclick="toggleFocus()" id="focus-toggle-btn">Focus Mode: Off</button>
+        <div class="sacred-letters">( কাফ - হা - ইয়া - আইন - সোয়াদ )</div>
+
+        <div class="nav-buttons hide-focus">
+            <button class="nav-btn" onclick="toggleHistory()">History</button>
+            <button class="nav-btn" onclick="resetAll()">Reset</button>
+            <button class="nav-btn" onclick="toggleFocus()">Focus Mode</button>
         </div>
 
         <div id="advice-box" class="info-panel hide-focus">
-            <h3 style="margin:0; color:var(--accent-teal); font-size:14px;">নির্দেশনা:</h3>
-            ১. শুরুতে ৩ বার দরুদ শরীফ পড়ুন। <br>
-            ২. ৫১৮ বার "আল-মুমিত" পাঠ করুন। <br>
-            ৩. শেষে আবার ৩ বার দরুদ শরীফ পড়ুন।
+            ১. শুরুতে ৩ বার দরুদ শরীফ। <br>
+            ২. ৫১৮ বার <b>"আল-মুমিত"</b> পাঠ। <br>
+            ৩. শেষে ৩ বার দরুদ ও দোয়া।
         </div>
 
         <div id="history-box" class="history-section info-panel">
-            <h3 style="margin:0; color:var(--accent-teal); font-size:14px;">আমল হিস্ট্রি:</h3>
+            <h3 style="margin:0; color:var(--accent-teal); font-size:13px;">হিস্ট্রি (শেষ ১০টি):</h3>
             <div id="history-list"></div>
         </div>
 
@@ -80,22 +86,22 @@
         <div class="status-msg" id="status">টার্গেট: ৫১৮</div>
 
         <div id="final-instruction">
-            ✨ আলহামদুলিল্লাহ! আমল সম্পন্ন হয়েছে। <br>
-            সময় লেগেছে: <span id="final-time" style="color:var(--accent-teal)"></span><br><br>
-            <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
-                <b>শেষ ধাপ:</b> এখন ৩ বার দরুদ শরীফ পাঠ করে দোয়া করুন।
+            ✨ আমল সম্পন্ন হয়েছে! <br>
+            সময়: <span id="final-time" style="color:var(--accent-teal)"></span><br><br>
+            <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; font-size: 14px;">
+                এখন ৩ বার দরুদ শরীফ পাঠ করে আপনার ও আপনার মায়ের জন্য দোয়া করুন।
             </div>
             <br>
-            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold;">ফিরে যান</button>
+            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold; font-size:16px;">সম্পন্ন</button>
         </div>
 
-        <div class="hide-focus" style="font-size: 10px; color: #4b6584;">প্রফেসর ফয়সাল | System Engineering</div>
+        <div class="hide-focus" style="font-size: 10px; color: #4b6584; margin-bottom: 5px;">Professor Foysal | Spiritual Engineering</div>
     </div>
 
     <script>
-        let count = 0;
+        let count = parseInt(localStorage.getItem('current_session_count')) || 0;
         let timerRunning = false;
-        let seconds = 0;
+        let seconds = parseInt(localStorage.getItem('current_session_seconds')) || 0;
         let timerInterval;
         let focusMode = false;
         const target = 518;
@@ -104,17 +110,19 @@
         const timerDisplay = document.getElementById('timer');
         const finalBox = document.getElementById('final-instruction');
 
+        // প্রাথমিক ডিসপ্লে সেট
+        updateDisplay();
+
+        function updateDisplay() {
+            countDisplay.innerText = count;
+            let mins = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
         function toggleFocus() {
             focusMode = !focusMode;
-            const container = document.getElementById('main-container');
-            const btn = document.getElementById('focus-toggle-btn');
-            if(focusMode) {
-                container.classList.add('focus-active');
-                btn.innerText = "Focus Mode: On";
-            } else {
-                container.classList.remove('focus-active');
-                btn.innerText = "Focus Mode: Off";
-            }
+            document.getElementById('main-container').classList.toggle('focus-active');
         }
 
         function startTimer() {
@@ -122,9 +130,8 @@
                 timerRunning = true;
                 timerInterval = setInterval(() => {
                     seconds++;
-                    let mins = Math.floor(seconds / 60);
-                    let secs = seconds % 60;
-                    timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    localStorage.setItem('current_session_seconds', seconds);
+                    updateDisplay();
                 }, 1000);
             }
         }
@@ -133,7 +140,8 @@
             if (count === 0) startTimer();
             if (count < target) {
                 count++;
-                countDisplay.innerText = count;
+                localStorage.setItem('current_session_count', count);
+                updateDisplay();
                 if (window.navigator.vibrate) window.navigator.vibrate(50);
                 if (count === target) completeAmal();
             }
@@ -147,6 +155,7 @@
             playBeep();
             if(focusMode) toggleFocus(); 
             finalBox.style.display = 'block';
+            clearSession();
         }
 
         function playBeep() {
@@ -157,21 +166,26 @@
                 oscillator.type = 'sine';
                 oscillator.frequency.setValueAtTime(880, context.currentTime);
                 gain.gain.setValueAtTime(0, context.currentTime);
-                gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.01);
-                gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.8);
+                gain.gain.linearRampToValueAtTime(0.5, context.currentTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 1);
                 oscillator.connect(gain);
                 gain.connect(context.destination);
                 oscillator.start();
-                oscillator.stop(context.currentTime + 1);
+                oscillator.stop(context.currentTime + 1.2);
             } catch(e) {}
         }
 
+        function clearSession() {
+            localStorage.removeItem('current_session_count');
+            localStorage.removeItem('current_session_seconds');
+        }
+
         function resetAll() {
-            if(confirm("রিসেট করতে চান?")) {
+            if(confirm("সবকিছু রিসেট করতে চান?")) {
                 clearInterval(timerInterval);
                 count = 0; seconds = 0; timerRunning = false;
-                countDisplay.innerText = "0";
-                timerDisplay.innerText = "00:00";
+                clearSession();
+                updateDisplay();
                 finalBox.style.display = 'none';
             }
         }
@@ -179,34 +193,32 @@
         function saveToHistory(timeTaken) {
             let history = JSON.parse(localStorage.getItem('amal_history') || '[]');
             const now = new Date();
-            const entry = { date: now.toLocaleDateString(), time: now.toLocaleTimeString(), duration: timeTaken };
+            const entry = { date: now.toLocaleDateString(), duration: timeTaken };
             history.unshift(entry);
             localStorage.setItem('amal_history', JSON.stringify(history.slice(0, 10)));
         }
 
         function toggleHistory() {
-            const historyBox = document.getElementById('history-box');
-            const adviceBox = document.getElementById('advice-box');
-            if (historyBox.style.display === 'none' || historyBox.style.display === '') {
+            const hBox = document.getElementById('history-box');
+            const aBox = document.getElementById('advice-box');
+            if (hBox.style.display === 'none' || hBox.style.display === '') {
                 loadHistory();
-                historyBox.style.display = 'block';
-                adviceBox.style.display = 'none';
+                hBox.style.display = 'block'; aBox.style.display = 'none';
             } else {
-                historyBox.style.display = 'none';
-                adviceBox.style.display = 'block';
+                hBox.style.display = 'none'; aBox.style.display = 'block';
             }
         }
 
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('amal_history') || '[]');
             const list = document.getElementById('history-list');
-            list.innerHTML = history.length ? '' : '<div style="text-align:center">No Records</div>';
+            list.innerHTML = history.length ? '' : '<div style="text-align:center">Record Empty</div>';
             history.forEach(item => {
                 list.innerHTML += `<div class="history-item"><span>✅ ${item.date}</span> <span>⏱️ ${item.duration}</span></div>`;
             });
         }
 
-        function closeFinal() { finalBox.style.display = 'none'; }
+        function closeFinal() { finalBox.style.display = 'none'; count = 0; seconds = 0; updateDisplay(); }
     </script>
 </body>
 </html>

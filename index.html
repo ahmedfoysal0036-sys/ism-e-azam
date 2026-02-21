@@ -42,7 +42,7 @@
             font-size: 28px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             transition: 0.1s; -webkit-tap-highlight-color: transparent; outline: none;
         }
-        .main-button:active { transform: scale(0.90); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+        .main-button:active { transform: scale(0.90); }
 
         .nav-buttons { display: flex; gap: 8px; margin-bottom: 5px; }
         .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 11px; }
@@ -52,7 +52,7 @@
             display: none; background: #112240; padding: 20px; border: 2px solid var(--peace-green);
             border-radius: 15px; font-size: 1rem; width: 85%; position: absolute; top: 25%; z-index: 20; text-align: center;
         }
-        .status-msg { color: var(--peace-green); font-size: 12px; opacity: 0.7; margin-bottom: 5px; }
+        .status-msg { color: var(--peace-green); font-size: 12px; opacity: 0.7; }
     </style>
 </head>
 <body class="notranslate">
@@ -75,7 +75,7 @@
         </div>
 
         <div id="history-box" class="history-section info-panel">
-            <h3 style="margin:0; color:var(--accent-teal); font-size:13px;">হিস্ট্রি (শেষ ১০টি):</h3>
+            <h3 style="margin:0; color:var(--accent-teal); font-size:13px;">হিস্ট্রি:</h3>
             <div id="history-list"></div>
         </div>
 
@@ -96,7 +96,7 @@
             <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold; font-size:16px;">সম্পন্ন</button>
         </div>
 
-        <div class="hide-focus" style="font-size: 10px; color: #4b6584; margin-bottom: 5px;">Professor Foysal | Spiritual Engineering</div>
+        <div class="hide-focus" style="font-size: 10px; color: #4b6584;">Professor Foysal | Spiritual Engineering</div>
     </div>
 
     <script>
@@ -104,6 +104,7 @@
         let timerRunning = false;
         let seconds = parseInt(localStorage.getItem('current_session_seconds')) || 0;
         let timerInterval;
+        let vibInterval; // Full vibration control
         let focusMode = false;
         const target = 518;
         
@@ -142,7 +143,10 @@
                 count++;
                 localStorage.setItem('current_session_count', count);
                 updateDisplay();
+                
+                // Tap vibration
                 if (window.navigator.vibrate) window.navigator.vibrate(50);
+                
                 if (count === target) completeAmal();
             }
         }
@@ -153,6 +157,14 @@
             saveToHistory(timerDisplay.innerText);
             document.getElementById('final-time').innerText = timerDisplay.innerText;
             playBeep();
+            
+            // Full Continuous Vibration start
+            if (window.navigator.vibrate) {
+                vibInterval = setInterval(() => {
+                    window.navigator.vibrate(1000);
+                }, 1000);
+            }
+
             if(focusMode) toggleFocus(); 
             finalBox.style.display = 'block';
             clearSession();
@@ -162,16 +174,11 @@
             try {
                 const context = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = context.createOscillator();
-                const gain = context.createGain();
                 oscillator.type = 'sine';
                 oscillator.frequency.setValueAtTime(880, context.currentTime);
-                gain.gain.setValueAtTime(0, context.currentTime);
-                gain.gain.linearRampToValueAtTime(0.5, context.currentTime + 0.01);
-                gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 1);
-                oscillator.connect(gain);
-                gain.connect(context.destination);
+                oscillator.connect(context.destination);
                 oscillator.start();
-                oscillator.stop(context.currentTime + 1.2);
+                oscillator.stop(context.currentTime + 1);
             } catch(e) {}
         }
 
@@ -183,6 +190,7 @@
         function resetAll() {
             if(confirm("সবকিছু রিসেট করতে চান?")) {
                 clearInterval(timerInterval);
+                if(vibInterval) clearInterval(vibInterval);
                 count = 0; seconds = 0; timerRunning = false;
                 clearSession();
                 updateDisplay();
@@ -218,7 +226,15 @@
             });
         }
 
-        function closeFinal() { finalBox.style.display = 'none'; count = 0; seconds = 0; updateDisplay(); }
+        function closeFinal() { 
+            if(vibInterval) {
+                clearInterval(vibInterval);
+                window.navigator.vibrate(0);
+            }
+            finalBox.style.display = 'none'; 
+            count = 0; seconds = 0; 
+            updateDisplay(); 
+        }
     </script>
 </body>
 </html>

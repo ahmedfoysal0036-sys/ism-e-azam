@@ -61,9 +61,9 @@
 
         <div id="advice-box" class="info-panel">
             <h3 style="margin:0; color:var(--accent-teal); font-size:14px;">নির্দেশনা (Amal Steps):</h3>
-            ১. শুরুতে <b>৩ বার দরুদ শরীফ</b> পড়ে নিন। <br>
-            ২. ৫১৮ বার <b>"Al-Mumit"</b> পাঠ করুন (বাটনে চাপ দিন)। <br>
-            ৩. শেষে আবার <b>৩ বার দরুদ শরীফ</b> পড়ে দোয়া করুন।
+            ১. শুরুতে <b>৩ বার দরুদ শরীফ</b> পড়ুন। <br>
+            ২. ৫১৮ বার <b>"Al-Mumit"</b> পাঠ করুন এবং বাটনে চাপ দিন। <br>
+            ৩. শেষে আবার <b>৩ বার দরুদ শরীফ</b> পড়ুন।
         </div>
 
         <div id="history-box" class="history-section info-panel">
@@ -72,24 +72,23 @@
         </div>
 
         <div class="timer-display" id="timer">00:00</div>
-
         <div class="counter-box" id="count-display">0</div>
 
         <button class="main-button" id="count-btn" onclick="increment()">গণনা</button>
 
-        <div class="status-msg" id="status">ম্যানুয়াল গণনা সক্রিয়</div>
+        <div class="status-msg" id="status">ম্যানুয়াল মুড: টার্গেট ৫১৮</div>
 
         <div id="final-instruction">
-            ✨ আলহামদুলিল্লাহ! সম্পন্ন হয়েছে। <br>
+            ✨ আলহামদুলিল্লাহ! আমল সম্পন্ন হয়েছে। <br>
             সময় লেগেছে: <span id="final-time" style="color:var(--accent-teal)"></span><br><br>
             <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
-                <b>শেষ ধাপ:</b> এখন পুনরায় <b>৩ বার দরুদ শরীফ</b> পাঠ করুন এবং প্রাণভরে দোয়া করুন।
+                <b>শেষ ধাপ:</b> এখন ৩ বার দরুদ শরীফ পাঠ করে দোয়া করুন।
             </div>
             <br>
             <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold;">ফিরে যান</button>
         </div>
 
-        <div style="font-size: 10px; color: #4b6584;">প্রerequisites: Wudu & Intention | প্রফেসর ফয়সাল</div>
+        <div style="font-size: 10px; color: #4b6584;">প্রফেসর ফয়সাল | System Engineering Approach</div>
     </div>
 
     <script>
@@ -120,8 +119,9 @@
             if (count < target) {
                 count++;
                 countDisplay.innerText = count;
-                // হ্যাপটিক ফিডব্যাক (মোবাইলে ভাইব্রেশন হবে যদি সাপোর্ট করে)
-                if (window.navigator.vibrate) window.navigator.vibrate(40);
+                
+                // Haptic Feedback (Vibration)
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
                 
                 if (count === target) {
                     completeAmal();
@@ -138,23 +138,32 @@
             finalBox.style.display = 'block';
         }
 
+        // Standard Audio Context Beep for all browsers
         function playBeep() {
             try {
                 const context = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = context.createOscillator();
+                const oscillator = context.createOscillator();
                 const gain = context.createGain();
-                osc.connect(gain);
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, context.currentTime); // A5 tone
+                
+                gain.gain.setValueAtTime(0, context.currentTime);
+                gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.8);
+
+                oscillator.connect(gain);
                 gain.connect(context.destination);
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, context.currentTime); 
-                gain.gain.setValueAtTime(0.5, context.currentTime);
-                osc.start();
-                osc.stop(context.currentTime + 0.5);
-            } catch(e) {}
+
+                oscillator.start();
+                oscillator.stop(context.currentTime + 1);
+            } catch(e) {
+                console.log("Audio not supported");
+            }
         }
 
         function resetAll() {
-            if(confirm("কাউন্টার এবং টাইমার কি রিসেট করতে চান?")) {
+            if(confirm("রিসেট করতে চান?")) {
                 clearInterval(timerInterval);
                 count = 0; seconds = 0; timerRunning = false;
                 countDisplay.innerText = "0";
@@ -187,7 +196,7 @@
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('amal_history') || '[]');
             const list = document.getElementById('history-list');
-            list.innerHTML = history.length ? '' : '<div style="text-align:center">কোনো রেকর্ড নেই।</div>';
+            list.innerHTML = history.length ? '' : '<div style="text-align:center">Record Empty</div>';
             history.forEach(item => {
                 list.innerHTML += `<div class="history-item"><span>✅ ${item.date}</span> <span>⏱️ ${item.duration}</span></div>`;
             });

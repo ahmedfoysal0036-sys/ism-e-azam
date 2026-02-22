@@ -13,31 +13,38 @@
         }
         body { 
             background: var(--deep-peace); color: #e0e6ed; font-family: -apple-system, sans-serif; 
-            height: 100vh; margin: 0; display: flex; flex-direction: column; overflow: hidden;
+            height: 100dvh; margin: 0; display: flex; flex-direction: column; overflow: hidden;
             user-select: none; -webkit-user-select: none; touch-action: manipulation;
             transition: background 0.05s ease-out;
+            box-sizing: border-box;
         }
         body.flash-active { background: #ffffff !important; }
 
-        .container { flex: 1; display: flex; flex-direction: column; padding: 20px; position: relative; }
+        .container { 
+            flex: 1; display: flex; flex-direction: column; 
+            padding: 15px; position: relative; 
+            height: 100%; box-sizing: border-box;
+            justify-content: space-between; /* কন্টেন্ট স্ক্রিন ফিট রাখার জন্য */
+        }
 
         .instructions {
             background: rgba(100, 255, 218, 0.1); border: 1.5px solid var(--accent-teal);
-            padding: 15px; border-radius: 12px; font-size: 0.9rem; width: 100%; text-align: left; line-height: 1.5;
-            box-sizing: border-box;
+            padding: 12px; border-radius: 12px; font-size: 0.85rem; width: 100%; text-align: left; 
+            line-height: 1.4; box-sizing: border-box;
         }
 
         #count-btn {
-            flex: 1; margin: 20px 0; background: rgba(255, 255, 255, 0.03);
+            flex: 1; margin: 15px 0; background: rgba(255, 255, 255, 0.03);
             border: 2px dashed rgba(100, 255, 218, 0.2); border-radius: 20px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             outline: none; -webkit-tap-highlight-color: transparent;
+            min-height: 200px; /* বাটন ছোট হবে না */
         }
 
-        .counter-display { font-size: 100px; font-weight: bold; color: var(--accent-teal); }
-        .target-label { font-size: 14px; color: var(--peace-green); margin-top: -10px; opacity: 0.8; }
+        .counter-display { font-size: clamp(60px, 15vw, 100px); font-weight: bold; color: var(--accent-teal); }
+        .target-label { font-size: 14px; color: var(--peace-green); margin-top: -5px; opacity: 0.8; }
 
-        .bottom-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .bottom-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
         .nav-btn { 
             background: var(--accent-teal); color: #000; border: none; padding: 12px 20px; 
             border-radius: 10px; font-weight: bold; font-size: 14px;
@@ -45,12 +52,16 @@
 
         .overlay {
             display: none; position: fixed; inset: 0; background: rgba(10, 25, 47, 0.98);
-            z-index: 100; padding: 25px; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 100; padding: 20px; flex-direction: column; align-items: center; justify-content: center;
         }
-        .marksheet-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin: 20px 0; width: 100%; }
+        .marksheet-grid { 
+            display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; 
+            margin: 15px 0; width: 100%; max-width: 400px;
+        }
         .day-box { 
             aspect-ratio: 1/1; border: 1px solid rgba(100, 255, 218, 0.3); border-radius: 6px;
             display: flex; align-items: center; justify-content: center; font-size: 11px;
+            background: rgba(255,255,255,0.02);
         }
         .day-box.done { background: var(--peace-green); color: #000; font-weight: bold; border: none; }
     </style>
@@ -69,18 +80,18 @@
         <div id="count-btn">
             <div class="counter-display" id="display">0</div>
             <div class="target-label">টার্গেট: ১০৩৬</div>
-            <div style="font-size: 10px; color: #4b6584; margin-top: 30px;">এখানে ট্যাপ করুন</div>
+            <div style="font-size: 10px; color: #4b6584; margin-top: 20px;">এখানে ট্যাপ করুন</div>
         </div>
 
         <div class="bottom-bar">
             <button class="nav-btn" onclick="toggleMarksheet()">৪০ দিন চার্ট</button>
-            <div style="color: #ff4d4d; font-size: 12px; text-decoration: underline;" onclick="resetCounter()">রিসেট</div>
+            <div style="color: #ff4d4d; font-size: 12px; text-decoration: underline; cursor: pointer; padding: 10px;" onclick="resetCounter()">রিসেট</div>
         </div>
-        <center><div style="font-size: 10px; color: #4b6584;">Professor Foysal | Spiritual Engineering</div></center>
+        <center><div style="font-size: 10px; color: #4b6584; padding-bottom: 5px;">Professor Foysal | Spiritual Engineering</div></center>
     </div>
 
     <div id="marksheet-overlay" class="overlay">
-        <h3 style="color:var(--accent-teal)">৪০ দিনের প্রগ্রেস</h3>
+        <h3 style="color:var(--accent-teal); margin-top:0;">৪০ দিনের প্রগ্রেস</h3>
         <div class="marksheet-grid" id="grid"></div>
         <button class="nav-btn" onclick="toggleMarksheet()">বন্ধ করুন</button>
     </div>

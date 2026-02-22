@@ -17,148 +17,156 @@
             display: flex; flex-direction: column; align-items: center; 
             height: 100vh; margin: 0; overflow: hidden; padding: 10px; box-sizing: border-box;
             user-select: none; -webkit-user-select: none;
+            transition: background 0.05s ease-out; /* Full screen flash transition */
         }
-        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 92%; }
         
-        .sacred-letters {
-            font-size: 1.3rem; color: var(--accent-teal); letter-spacing: 1px;
-            margin: 10px 0; font-weight: bold; text-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
-        }
+        /* Full Screen Flash Class */
+        body.flash-active { background: #ffffff !important; }
 
+        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 95%; z-index: 10; }
+        
+        .sacred-letters { font-size: 1.3rem; color: var(--accent-teal); letter-spacing: 1px; margin: 10px 0; font-weight: bold; text-shadow: 0 0 15px rgba(100, 255, 218, 0.5); }
         .counter-box { font-size: 110px; font-weight: bold; color: var(--accent-teal); margin: 5px 0; }
 
-        /* বাটন ডিজাইন ও ফ্ল্যাশ ইফেক্ট */
         .main-button {
-            background: var(--peace-green); color: #0a192f; width: 210px; height: 210px;
-            border-radius: 50%; border: 8px solid rgba(255, 255, 255, 0.1);
-            font-size: 30px; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            transition: background 0.05s ease-out; /* দ্রুত ফ্ল্যাশ */
+            background: var(--peace-green); color: #0a192f; width: 220px; height: 220px;
+            border-radius: 50%; border: 10px solid rgba(255, 255, 255, 0.2);
+            font-size: 32px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 10px 50px rgba(0,0,0,0.7);
+            transition: transform 0.05s;
             -webkit-tap-highlight-color: transparent; outline: none;
             display: flex; align-items: center; justify-content: center;
         }
+        .main-button:active { transform: scale(0.92); }
 
-        /* বাটনে চাপ দিলে সাদা ফ্ল্যাশ হবে */
-        .main-button:active { 
-            background: #ffffff !important; 
-            transform: scale(0.96);
-            box-shadow: 0 0 30px #ffffff;
+        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 8px 12px; border-radius: 8px; font-size: 11px; }
+        
+        .panel { 
+            display: none; background: rgba(10, 25, 47, 0.98); border: 2px solid var(--accent-teal);
+            padding: 15px; border-radius: 15px; width: 85%; position: absolute; top: 15%; z-index: 50;
         }
 
-        .nav-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
-        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 8px 16px; border-radius: 8px; font-size: 12px; }
-        
+        .marksheet-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin-top: 10px; }
+        .day-box { width: 30px; height: 30px; border: 1px solid #1a3050; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #4b6584; }
+        .day-box.done { background: var(--peace-green); color: #000; font-weight: bold; }
+
         #final-instruction {
-            display: none; background: #112240; padding: 25px; border: 3px solid var(--peace-green);
-            border-radius: 20px; width: 85%; position: absolute; top: 20%; z-index: 20; text-align: center;
-            box-shadow: 0 0 60px rgba(0,0,0,0.9);
+            display: none; background: #112240; padding: 25px; border: 4px solid var(--peace-green);
+            border-radius: 20px; width: 85%; position: absolute; top: 20%; z-index: 100; text-align: center;
+            box-shadow: 0 0 100px #ffffff;
         }
     </style>
 </head>
-<body class="notranslate">
+<body class="notranslate" id="body-bg">
 
     <div class="container">
         <div class="sacred-letters">( কাফ - হা - ইয়া - আইন - সোয়াদ )</div>
 
-        <div id="advice-box" style="background: rgba(100, 255, 218, 0.05); border: 1px solid rgba(100, 255, 218, 0.2); padding: 12px; border-radius: 12px; font-size: 0.85rem; width: 85%; text-align: center;">
-            ১. শুরুতে ৩ বার দরুদ শরীফ। <br>
-            ২. ৫১৮ বার <b>"আল-মুমীত"</b> পাঠ। <br>
-            ৩. শেষে ৩ বার দরুদ ও দোয়া।
+        <div class="nav-buttons" style="display:flex; gap:10px;">
+            <button class="nav-btn" onclick="togglePanel('history-panel')">হিস্ট্রি</button>
+            <button class="nav-btn" onclick="togglePanel('marksheet-panel')">৪০ দিন</button>
+            <button class="nav-btn" onclick="resetAll()">রিসেট</button>
         </div>
 
-        <div style="font-size: 1.2rem; color: var(--peace-green); font-family: monospace; margin-top:10px;" id="timer">00:00</div>
+        <div style="font-size: 1.2rem; color: var(--peace-green); font-family: monospace;" id="timer">00:00</div>
         <div class="counter-box" id="count-display">0</div>
 
         <button class="main-button" id="count-btn" ontouchstart="handleTap(event)" onmousedown="handleTap(event)">গণনা</button>
 
-        <div style="color: var(--peace-green); font-size: 12px; opacity: 0.7; margin-bottom: 10px;">টার্গেট: ৫১৮</div>
+        <div style="color: var(--peace-green); font-size: 12px; opacity: 0.8;">টার্গেট: ১০৩৬</div>
 
-        <div class="nav-buttons">
-            <button class="nav-btn" onclick="resetAll()">রিসেট</button>
-            <button class="nav-btn" onclick="location.reload()">রিফ্রেশ</button>
+        <div id="history-panel" class="panel">
+            <h3 style="color:var(--accent-teal)">শেষ ৫টি আমল</h3>
+            <div id="history-list" style="text-align: left; font-size: 13px;"></div>
+            <br><button class="nav-btn" onclick="togglePanel('history-panel')">বন্ধ</button>
+        </div>
+
+        <div id="marksheet-panel" class="panel">
+            <h3 style="color:var(--accent-teal)">৪০ দিনের মার্কশিট</h3>
+            <div class="marksheet-grid" id="marksheet-grid"></div>
+            <br><button class="nav-btn" onclick="togglePanel('marksheet-panel')">বন্ধ</button>
         </div>
 
         <div id="final-instruction">
-            ✨ আলহামদুলিল্লাহ! <br> সম্পন্ন হয়েছে! <br><br>
-            <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; font-size: 15px;">
-                এখন ৩ বার দরুদ শরীফ পাঠ করে দোয়া করুন।
-            </div>
-            <br>
-            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; border: none; font-weight:bold; font-size:18px; padding:12px;">সম্পন্ন</button>
+            ✨ ১০৩৬ বার পূর্ণ! <br><br>
+            <p>দরুদ শরীফ পড়ে দোয়া করুন।</p>
+            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; font-weight:bold; font-size:18px; padding:12px;">সম্পন্ন</button>
         </div>
 
-        <div style="font-size: 10px; color: #4b6584; margin-bottom: 5px;">Professor Foysal | Spiritual Engineering</div>
+        <div style="font-size: 10px; color: #4b6584;">Professor Foysal | Spiritual Engineering</div>
     </div>
 
     <script>
-        let count = 0;
+        let count = parseInt(localStorage.getItem('current_count')) || 0;
         let timerRunning = false;
         let seconds = 0;
         let timerInterval;
         let alarmInterval;
         let audioCtx;
-        const target = 518;
-        
-        const countDisplay = document.getElementById('count-display');
-        const timerDisplay = document.getElementById('timer');
-        const finalBox = document.getElementById('final-instruction');
+        const target = 1036;
 
-        // iPhone-এর জন্য অডিও সিস্টেম চালু করা
+        const body = document.getElementById('body-bg');
+        document.getElementById('count-display').innerText = count;
+
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
         function handleTap(e) {
             e.preventDefault(); 
             initAudio();
             
-            if (!timerRunning && count < target) {
-                timerRunning = true;
-                timerInterval = setInterval(() => {
-                    seconds++;
-                    let mins = Math.floor(seconds / 60);
-                    let secs = seconds % 60;
-                    timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                }, 1000);
-            }
-
             if (count < target) {
+                // Full Screen Flash effect
+                body.classList.add('flash-active');
+                setTimeout(() => body.classList.remove('flash-active'), 50);
+
+                if (!timerRunning) {
+                    timerRunning = true;
+                    timerInterval = setInterval(() => {
+                        seconds++;
+                        let mins = Math.floor(seconds / 60);
+                        let secs = seconds % 60;
+                        document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    }, 1000);
+                }
+
                 count++;
-                countDisplay.innerText = count;
-                playTick(); // ট্যাপ করলে শব্দ হবে
+                document.getElementById('count-display').innerText = count;
+                localStorage.setItem('current_count', count);
+                playBoostedTick();
+                
                 if (count === target) completeAmal();
             }
         }
 
-        function playTick() {
+        function playBoostedTick() {
             if (!audioCtx) return;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1000, audioCtx.currentTime); // হালকা ক্লিক সাউন্ড
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            osc.type = 'square'; // Sharper sound for better visibility in noise
+            osc.frequency.setValueAtTime(1500, audioCtx.currentTime); // Sharp beep
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); // Increased loudness
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
         }
 
         function completeAmal() {
             clearInterval(timerInterval);
-            timerRunning = false;
-            
-            // আমল শেষ হলে একটানা বিপ শব্দ বাজবে
-            alarmInterval = setInterval(() => {
-                playAlarm(880, 0.3); 
+            alarmInterval = setInterval(() => { 
+                playAlarm(900, 0.4); 
+                playAlarm(1100, 0.4); 
             }, 600);
-
-            finalBox.style.display = 'block';
+            document.getElementById('final-instruction').style.display = 'block';
+            
+            let doneDays = parseInt(localStorage.getItem('done_days')) || 0;
+            localStorage.setItem('done_days', doneDays + 1);
+            
+            let history = JSON.parse(localStorage.getItem('amal_history') || '[]');
+            history.unshift({ date: new Date().toLocaleDateString(), duration: document.getElementById('timer').innerText });
+            localStorage.setItem('amal_history', JSON.stringify(history.slice(0, 5)));
         }
 
         function playAlarm(freq, duration) {
@@ -167,27 +175,42 @@
             const gain = audioCtx.createGain();
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime); // High volume alarm
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
-        function resetAll() {
-            if(confirm("রিসেট করতে চান?")) {
-                location.reload();
+        function togglePanel(id) {
+            const el = document.getElementById(id);
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+            if(id === 'history-panel') loadHistory();
+            if(id === 'marksheet-panel') loadMarksheet();
+        }
+
+        function loadHistory() {
+            let history = JSON.parse(localStorage.getItem('amal_history') || '[]');
+            const list = document.getElementById('history-list');
+            list.innerHTML = history.length ? '' : 'রেকর্ড নেই';
+            history.forEach(item => {
+                list.innerHTML += `<div style="border-bottom:1px solid #1a3050; padding:5px 0;">✅ ${item.date} - ⏱️ ${item.duration}</div>`;
+            });
+        }
+
+        function loadMarksheet() {
+            const grid = document.getElementById('marksheet-grid');
+            grid.innerHTML = '';
+            let doneDays = parseInt(localStorage.getItem('done_days')) || 0;
+            for(let i=1; i<=40; i++) {
+                const box = document.createElement('div');
+                box.className = i <= doneDays ? 'day-box done' : 'day-box';
+                box.innerText = i;
+                grid.appendChild(box);
             }
         }
 
-        function closeFinal() { 
-            if(alarmInterval) clearInterval(alarmInterval);
-            finalBox.style.display = 'none'; 
-            count = 0; seconds = 0;
-            countDisplay.innerText = "0";
-            timerDisplay.innerText = "00:00";
-        }
+        function resetAll() { if(confirm("রিসেট?")) { localStorage.removeItem('current_count'); location.reload(); } }
+        function closeFinal() { if(alarmInterval) clearInterval(alarmInterval); localStorage.removeItem('current_count'); location.reload(); }
     </script>
 </body>
 </html>

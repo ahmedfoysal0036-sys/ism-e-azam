@@ -15,82 +15,62 @@
         body { 
             background: var(--deep-peace); color: var(--text-soft); font-family: -apple-system, sans-serif; 
             display: flex; flex-direction: column; align-items: center; 
-            height: 100vh; margin: 0; overflow: hidden; padding: 10px; box-sizing: border-box;
+            height: 100vh; margin: 0; overflow: hidden; padding: 15px; box-sizing: border-box;
             user-select: none; -webkit-user-select: none;
-            transition: background 0.05s ease-out; /* Full screen flash transition */
+            touch-action: manipulation; /* জুম প্রিভেন্ট করবে এবং দ্রুত ট্যাপ হবে */
+            transition: background 0.04s ease-out;
         }
-        
-        /* Full Screen Flash Class */
         body.flash-active { background: #ffffff !important; }
 
-        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 95%; z-index: 10; }
+        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100%; position: relative; z-index: 10; }
         
-        .sacred-letters { font-size: 1.3rem; color: var(--accent-teal); letter-spacing: 1px; margin: 10px 0; font-weight: bold; text-shadow: 0 0 15px rgba(100, 255, 218, 0.5); }
-        .counter-box { font-size: 110px; font-weight: bold; color: var(--accent-teal); margin: 5px 0; }
+        .instructions {
+            background: rgba(100, 255, 218, 0.15); border: 1.5px solid var(--accent-teal);
+            padding: 12px; border-radius: 12px; font-size: 0.85rem; width: 100%; text-align: left; line-height: 1.4;
+        }
+
+        .sacred-letters { font-size: 1.5rem; color: var(--accent-teal); font-weight: bold; margin: 8px 0; text-shadow: 0 0 15px rgba(100, 255, 218, 0.6); }
 
         .main-button {
-            background: var(--peace-green); color: #0a192f; width: 220px; height: 220px;
-            border-radius: 50%; border: 10px solid rgba(255, 255, 255, 0.2);
-            font-size: 32px; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 10px 50px rgba(0,0,0,0.7);
-            transition: transform 0.05s;
-            -webkit-tap-highlight-color: transparent; outline: none;
+            background: var(--peace-green); color: #0a192f; width: 250px; height: 250px;
+            border-radius: 50%; border: 12px solid rgba(255, 255, 255, 0.25);
+            font-size: 80px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 15px 50px rgba(0,0,0,0.6);
             display: flex; align-items: center; justify-content: center;
+            transition: transform 0.05s active; -webkit-tap-highlight-color: transparent; outline: none;
         }
         .main-button:active { transform: scale(0.92); }
 
-        .nav-btn { background: transparent; border: 1px solid var(--accent-teal); color: var(--accent-teal); padding: 8px 12px; border-radius: 8px; font-size: 11px; }
-        
-        .panel { 
-            display: none; background: rgba(10, 25, 47, 0.98); border: 2px solid var(--accent-teal);
-            padding: 15px; border-radius: 15px; width: 85%; position: absolute; top: 15%; z-index: 50;
+        .marksheet-title { font-size: 1rem; color: var(--accent-teal); margin-top: 15px; font-weight: 600; }
+        .marksheet-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 10px 0; width: 100%; }
+        .day-box { 
+            aspect-ratio: 1/1; border: 1px solid rgba(100, 255, 218, 0.2); border-radius: 6px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 11px; color: #4b6584; cursor: pointer; background: rgba(255,255,255,0.03);
         }
+        .day-box.done { background: var(--peace-green); color: #0a192f; font-weight: bold; border: none; box-shadow: 0 0 12px var(--peace-green); }
 
-        .marksheet-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin-top: 10px; }
-        .day-box { width: 30px; height: 30px; border: 1px solid #1a3050; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #4b6584; }
-        .day-box.done { background: var(--peace-green); color: #000; font-weight: bold; }
-
-        #final-instruction {
-            display: none; background: #112240; padding: 25px; border: 4px solid var(--peace-green);
-            border-radius: 20px; width: 85%; position: absolute; top: 20%; z-index: 100; text-align: center;
-            box-shadow: 0 0 100px #ffffff;
-        }
+        .reset-btn { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 4px 12px; border-radius: 5px; font-size: 11px; margin-top: 5px; cursor: pointer; opacity: 0.6; }
     </style>
 </head>
-<body class="notranslate" id="body-bg">
+<body>
 
     <div class="container">
-        <div class="sacred-letters">( কাফ - হা - ইয়া - আইন - সোয়াদ )</div>
-
-        <div class="nav-buttons" style="display:flex; gap:10px;">
-            <button class="nav-btn" onclick="togglePanel('history-panel')">হিস্ট্রি</button>
-            <button class="nav-btn" onclick="togglePanel('marksheet-panel')">৪০ দিন</button>
-            <button class="nav-btn" onclick="resetAll()">রিসেট</button>
+        <div class="instructions">
+            <b>আমলের নিয়ম:</b> <br>
+            ১. ৩ বার দরুদ শরীফ। <br>
+            ২. ১০৩৬ বার (৫১৮ x ২) <b>"আল-মুমীত"</b>। <br>
+            ৩. ৩ বার দরুদ ও দোয়া করে শেষ করুন।
         </div>
 
-        <div style="font-size: 1.2rem; color: var(--peace-green); font-family: monospace;" id="timer">00:00</div>
-        <div class="counter-box" id="count-display">0</div>
+        <div class="sacred-letters">কাফ-হা-ইয়া-আইন-সোয়াদ</div>
 
-        <button class="main-button" id="count-btn" ontouchstart="handleTap(event)" onmousedown="handleTap(event)">গণনা</button>
+        <button class="main-button" id="count-btn" ontouchstart="handleTap(event)" onmousedown="handleTap(event)">0</button>
 
-        <div style="color: var(--peace-green); font-size: 12px; opacity: 0.8;">টার্গেট: ১০৩৬</div>
-
-        <div id="history-panel" class="panel">
-            <h3 style="color:var(--accent-teal)">শেষ ৫টি আমল</h3>
-            <div id="history-list" style="text-align: left; font-size: 13px;"></div>
-            <br><button class="nav-btn" onclick="togglePanel('history-panel')">বন্ধ</button>
-        </div>
-
-        <div id="marksheet-panel" class="panel">
-            <h3 style="color:var(--accent-teal)">৪০ দিনের মার্কশিট</h3>
+        <div style="text-align:center; width: 100%;">
+            <div class="marksheet-title">৪০ দিনের মার্কশিট (ম্যানুয়াল)</div>
             <div class="marksheet-grid" id="marksheet-grid"></div>
-            <br><button class="nav-btn" onclick="togglePanel('marksheet-panel')">বন্ধ</button>
-        </div>
-
-        <div id="final-instruction">
-            ✨ ১০৩৬ বার পূর্ণ! <br><br>
-            <p>দরুদ শরীফ পড়ে দোয়া করুন।</p>
-            <button class="nav-btn" onclick="closeFinal()" style="width: 100%; background: var(--peace-green); color: #000; font-weight:bold; font-size:18px; padding:12px;">সম্পন্ন</button>
+            <button class="reset-btn" onclick="resetCounter()">গণনা রিসেট করুন</button>
         </div>
 
         <div style="font-size: 10px; color: #4b6584;">Professor Foysal | Spiritual Engineering</div>
@@ -98,119 +78,66 @@
 
     <script>
         let count = parseInt(localStorage.getItem('current_count')) || 0;
-        let timerRunning = false;
-        let seconds = 0;
-        let timerInterval;
-        let alarmInterval;
-        let audioCtx;
         const target = 1036;
+        const btn = document.getElementById('count-btn');
+        const body = document.body;
 
-        const body = document.getElementById('body-bg');
-        document.getElementById('count-display').innerText = count;
+        btn.innerText = count;
 
-        function initAudio() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
-
-        function handleTap(e) {
-            e.preventDefault(); 
-            initAudio();
-            
-            if (count < target) {
-                // Full Screen Flash effect
-                body.classList.add('flash-active');
-                setTimeout(() => body.classList.remove('flash-active'), 50);
-
-                if (!timerRunning) {
-                    timerRunning = true;
-                    timerInterval = setInterval(() => {
-                        seconds++;
-                        let mins = Math.floor(seconds / 60);
-                        let secs = seconds % 60;
-                        document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                    }, 1000);
-                }
-
-                count++;
-                document.getElementById('count-display').innerText = count;
-                localStorage.setItem('current_count', count);
-                playBoostedTick();
-                
-                if (count === target) completeAmal();
+        function triggerHaptic() {
+            // আইফোনে navigator.vibrate কাজ না করলে এটি একটি ছোট সাউন্ডলেস পালস জেনারেট করার চেষ্টা করবে
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
             }
         }
 
-        function playBoostedTick() {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'square'; // Sharper sound for better visibility in noise
-            osc.frequency.setValueAtTime(1500, audioCtx.currentTime); // Sharp beep
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); // Increased loudness
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-        }
+        function handleTap(e) {
+            e.preventDefault();
+            if (count < target) {
+                // Full Screen Flash
+                body.classList.add('flash-active');
+                setTimeout(() => body.classList.remove('flash-active'), 40);
 
-        function completeAmal() {
-            clearInterval(timerInterval);
-            alarmInterval = setInterval(() => { 
-                playAlarm(900, 0.4); 
-                playAlarm(1100, 0.4); 
-            }, 600);
-            document.getElementById('final-instruction').style.display = 'block';
-            
-            let doneDays = parseInt(localStorage.getItem('done_days')) || 0;
-            localStorage.setItem('done_days', doneDays + 1);
-            
-            let history = JSON.parse(localStorage.getItem('amal_history') || '[]');
-            history.unshift({ date: new Date().toLocaleDateString(), duration: document.getElementById('timer').innerText });
-            localStorage.setItem('amal_history', JSON.stringify(history.slice(0, 5)));
-        }
+                triggerHaptic();
 
-        function playAlarm(freq, duration) {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.4, audioCtx.currentTime); // High volume alarm
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + duration);
-        }
+                count++;
+                btn.innerText = count;
+                localStorage.setItem('current_count', count);
 
-        function togglePanel(id) {
-            const el = document.getElementById(id);
-            el.style.display = el.style.display === 'block' ? 'none' : 'block';
-            if(id === 'history-panel') loadHistory();
-            if(id === 'marksheet-panel') loadMarksheet();
-        }
-
-        function loadHistory() {
-            let history = JSON.parse(localStorage.getItem('amal_history') || '[]');
-            const list = document.getElementById('history-list');
-            list.innerHTML = history.length ? '' : 'রেকর্ড নেই';
-            history.forEach(item => {
-                list.innerHTML += `<div style="border-bottom:1px solid #1a3050; padding:5px 0;">✅ ${item.date} - ⏱️ ${item.duration}</div>`;
-            });
+                if (count === target) {
+                    // আইফোনের জন্য হ্যাপটিক অ্যালার্ট
+                    setTimeout(() => { alert("মাশাআল্লাহ! ১০৩৬ বার পূর্ণ হয়েছে।"); }, 100);
+                }
+            }
         }
 
         function loadMarksheet() {
             const grid = document.getElementById('marksheet-grid');
             grid.innerHTML = '';
-            let doneDays = parseInt(localStorage.getItem('done_days')) || 0;
+            let marks = JSON.parse(localStorage.getItem('manual_marks') || '{}');
+            
             for(let i=1; i<=40; i++) {
                 const box = document.createElement('div');
-                box.className = i <= doneDays ? 'day-box done' : 'day-box';
+                box.className = marks[i] ? 'day-box done' : 'day-box';
                 box.innerText = i;
+                box.onclick = () => {
+                    marks[i] = !marks[i];
+                    localStorage.setItem('manual_marks', JSON.stringify(marks));
+                    loadMarksheet();
+                };
                 grid.appendChild(box);
             }
         }
 
-        function resetAll() { if(confirm("রিসেট?")) { localStorage.removeItem('current_count'); location.reload(); } }
-        function closeFinal() { if(alarmInterval) clearInterval(alarmInterval); localStorage.removeItem('current_count'); location.reload(); }
+        function resetCounter() {
+            if(confirm("আজকের গণনা কি ০ করতে চান?")) {
+                count = 0;
+                btn.innerText = 0;
+                localStorage.setItem('current_count', 0);
+            }
+        }
+
+        loadMarksheet();
     </script>
 </body>
 </html>
